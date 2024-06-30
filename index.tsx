@@ -15,6 +15,7 @@ const settings = definePluginSettings({
         description: "Hide the warning card displayed at the top of the theme library tab",
         restartNeeded: false,
     },
+    // probably removing this soon due to no longer using json files to store themes
     domain: {
         type: OptionType.BOOLEAN,
         default: false,
