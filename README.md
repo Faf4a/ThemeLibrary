@@ -14,3 +14,4 @@ The installation guide can be found [here](https://discord.com/channels/10150602
 
 ## Preview
 
+![preview](https://i.imgur.com/YIFfPQV.mp4)
