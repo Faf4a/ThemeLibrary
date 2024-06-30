@@ -14,4 +14,4 @@ The installation guide can be found [here](https://discord.com/channels/10150602
 
 ## Preview
 
-![preview](https://i.imgur.com/YIFfPQV.mp4)
+<video autoplay loop src="https://github.com/Faf4a/ThemeLibrary/assets/87046111/d1ce9632-374a-4d6a-9f11-42827fce2002" />
