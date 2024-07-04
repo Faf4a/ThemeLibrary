@@ -4,25 +4,10 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { definePluginSettings } from "@api/Settings";
-import definePlugin, { OptionType } from "@utils/types";
+import definePlugin from "@utils/types";
 import { SettingsRouter } from "@webpack/common";
 
-const settings = definePluginSettings({
-    hideWarningCard: {
-        type: OptionType.BOOLEAN,
-        default: false,
-        description: "Hide the warning card displayed at the top of the theme library tab",
-        restartNeeded: false,
-    },
-    // probably removing this soon due to no longer using json files to store themes
-    domain: {
-        type: OptionType.BOOLEAN,
-        default: false,
-        description: "Use Github instead of the default domain for themes",
-        restartNeeded: false,
-    },
-});
+import { settings } from "./settings";
 
 export default definePlugin({
     name: "ThemeLibrary",
