@@ -5,7 +5,8 @@ Add Themes directly within Vencord!
 ### Features
 
 - Ability to submit themes
-- You are able to like your favourite themes
+- Like your favourite themes!
+- Download themes directly within Vencord
 - ... more may or may not be added in the future
 
 ## Installation
