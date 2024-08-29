@@ -9,7 +9,6 @@ import "./styles.css";
 
 import { generateId } from "@api/Commands";
 import * as DataStore from "@api/DataStore";
-import { Settings } from "@api/Settings";
 import { CodeBlock } from "@components/CodeBlock";
 import { ErrorCard } from "@components/ErrorCard";
 import { OpenExternalIcon } from "@components/Icons";
@@ -18,11 +17,12 @@ import { proxyLazy } from "@utils/lazy";
 import { Logger } from "@utils/Logger";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
-import { openModal } from "@utils/modal";
-import { findByPropsLazy, findLazy } from "@webpack";
-import { Button, Card, FluxDispatcher, Forms, React, SearchableSelect, TabBar, TextArea, TextInput, Toasts, useEffect, UserStore, UserUtils, useState } from "@webpack/common";
+import { findByPropsLazy } from "@webpack";
+import { Button, Card, FluxDispatcher, Forms, Parser, React, SearchableSelect, TabBar, TextArea, TextInput, Toasts, useEffect, UserStore, UserUtils, useState } from "@webpack/common";
+import { ModalContent, ModalFooter, ModalHeader, ModalRoot, ModalSize, openModal } from "@utils/modal";
 import { User } from "discord-types/general";
 import { Constructor } from "type-fest";
+import { Settings } from "@api/Settings";
 
 import { SearchStatus, TabItem, Theme, ThemeLikeProps } from "../types";
 import { isAuthorized } from "../utils/auth";
@@ -109,22 +109,22 @@ function ThemeTab() {
 
     const themeFilter = (theme: Theme) => {
         const enabled = themeLinks.includes(`${API_URL}/${theme.name}`);
-        const tags = new Set(theme.tags.map(tag => tag.toLowerCase()));
+        const tags = new Set(theme.tags.map(tag => tag?.toLowerCase()));
 
         if (!enabled && searchValue.status === SearchStatus.ENABLED) return false;
 
         const anyTags = SearchTags[searchValue.status];
-        if (anyTags && !tags.has(anyTags.toLowerCase())) return false;
+        if (anyTags && !tags.has(anyTags?.toLowerCase())) return false;
 
         if ((enabled && searchValue.status === SearchStatus.DISABLED) || (!enabled && searchValue.status === SearchStatus.ENABLED)) return false;
 
         if (!searchValue.value.length) return true;
 
-        const v = searchValue.value.toLowerCase();
+        const v = searchValue.value?.toLowerCase();
         return (
-            theme.name.toLowerCase().includes(v) ||
-            theme.description.toLowerCase().includes(v) ||
-            (Array.isArray(theme.author) ? theme.author.some(author => author.discord_name.toLowerCase().includes(v)) : theme.author.discord_name.toLowerCase().includes(v)) ||
+            theme.name?.toLowerCase().includes(v) ||
+            theme.description?.toLowerCase().includes(v) ||
+            (Array.isArray(theme.author) ? theme.author.some(author => author.discord_name?.toLowerCase()?.includes(v)) : theme.author.discord_name?.toLowerCase()?.includes(v)) ||
             tags.has(v)
         );
     };
@@ -233,7 +233,7 @@ function ThemeTab() {
                                         {theme.name}
                                     </Forms.FormTitle>
                                     <Forms.FormText className="vce-theme-text">
-                                        {theme.description}
+                                        {Parser.parse(theme.description)}
                                     </Forms.FormText>
                                     <div className="vce-theme-info">
                                         <div style={{
@@ -268,8 +268,54 @@ function ThemeTab() {
                                                     <Button
                                                         onClick={() => {
                                                             const onlineThemeLinks = [...themeLinks, `${API_URL}/${theme.name}`];
-                                                            setThemeLinks(onlineThemeLinks);
-                                                            Vencord.Settings.themeLinks = onlineThemeLinks;
+
+                                                            const requiresThemeAttributes = theme.requiresThemeAttributes ?? false;
+
+                                                            if (requiresThemeAttributes && !Settings.plugins.ThemeAttributes.enabled) {
+                                                                openModal(modalProps => (
+                                                                    <ModalRoot {...modalProps} size={ModalSize.SMALL}>
+                                                                        <ModalHeader>
+                                                                            <Forms.FormTitle tag="h4">Hold on!</Forms.FormTitle>
+                                                                        </ModalHeader>
+                                                                        <ModalContent>
+                                                                            <Forms.FormText style={{
+                                                                                padding: "8px",
+                                                                            }}>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <p>This theme requires the <b>ThemeAttributes</b> plugin to work properly!</p>
+                                                                                    <p>
+                                                                                        Do you want to enable it?
+                                                                                    </p>
+                                                                                </div>
+                                                                            </Forms.FormText>
+                                                                        </ModalContent>
+                                                                        <ModalFooter>
+                                                                            <Button
+                                                                                look={Button.Looks.FILLED}
+                                                                                color={Button.Colors.GREEN}
+                                                                                onClick={async () => {
+                                                                                    Settings.plugins.ThemeAttributes.enabled = true;
+                                                                                    modalProps.onClose();
+                                                                                    setThemeLinks(onlineThemeLinks);
+                                                                                    Vencord.Settings.themeLinks = onlineThemeLinks;
+                                                                                }}
+                                                                            >
+                                                                                Enable Plugin
+                                                                            </Button>
+                                                                            <Button
+                                                                                color={Button.Colors.RED}
+                                                                                look={Button.Looks.FILLED}
+                                                                                className={Margins.right8} onClick={() => modalProps.onClose()}
+                                                                            >
+                                                                                Cancel
+                                                                            </Button>
+                                                                        </ModalFooter>
+                                                                    </ModalRoot>
+                                                                ));
+                                                            } else {
+                                                                setThemeLinks(onlineThemeLinks);
+                                                                Vencord.Settings.themeLinks = onlineThemeLinks;
+                                                            }
                                                         }}
                                                         size={Button.Sizes.MEDIUM}
                                                         color={Button.Colors.GREEN}
@@ -365,7 +411,7 @@ function ThemeTab() {
                                         {theme.name}
                                     </Forms.FormTitle>
                                     <Forms.FormText className="vce-theme-text">
-                                        {theme.description}
+                                        {Parser.parse(theme.description)}
                                     </Forms.FormText>
                                     <img
                                         role="presentation"
@@ -407,8 +453,54 @@ function ThemeTab() {
                                                     <Button
                                                         onClick={() => {
                                                             const onlineThemeLinks = [...themeLinks, `${API_URL}/${theme.name}`];
-                                                            setThemeLinks(onlineThemeLinks);
-                                                            Vencord.Settings.themeLinks = onlineThemeLinks;
+
+                                                            const requiresThemeAttributes = theme.requiresThemeAttributes ?? false;
+
+                                                            if (requiresThemeAttributes && !Settings.plugins.ThemeAttributes.enabled) {
+                                                                openModal(modalProps => (
+                                                                    <ModalRoot {...modalProps} size={ModalSize.SMALL}>
+                                                                        <ModalHeader>
+                                                                            <Forms.FormTitle tag="h4">Hold on!</Forms.FormTitle>
+                                                                        </ModalHeader>
+                                                                        <ModalContent>
+                                                                            <Forms.FormText style={{
+                                                                                padding: "8px",
+                                                                            }}>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <p>This theme requires the <b>ThemeAttributes</b> plugin to work properly!</p>
+                                                                                    <p>
+                                                                                        Do you want to enable it?
+                                                                                    </p>
+                                                                                </div>
+                                                                            </Forms.FormText>
+                                                                        </ModalContent>
+                                                                        <ModalFooter>
+                                                                            <Button
+                                                                                look={Button.Looks.FILLED}
+                                                                                color={Button.Colors.GREEN}
+                                                                                onClick={async () => {
+                                                                                    Settings.plugins.ThemeAttributes.enabled = true;
+                                                                                    modalProps.onClose();
+                                                                                    setThemeLinks(onlineThemeLinks);
+                                                                                    Vencord.Settings.themeLinks = onlineThemeLinks;
+                                                                                }}
+                                                                            >
+                                                                                Enable Plugin
+                                                                            </Button>
+                                                                            <Button
+                                                                                color={Button.Colors.RED}
+                                                                                look={Button.Looks.FILLED}
+                                                                                className={Margins.right8} onClick={() => modalProps.onClose()}
+                                                                            >
+                                                                                Cancel
+                                                                            </Button>
+                                                                        </ModalFooter>
+                                                                    </ModalRoot>
+                                                                ));
+                                                            } else {
+                                                                setThemeLinks(onlineThemeLinks);
+                                                                Vencord.Settings.themeLinks = onlineThemeLinks;
+                                                            }
                                                         }}
                                                         size={Button.Sizes.MEDIUM}
                                                         color={Button.Colors.GREEN}
