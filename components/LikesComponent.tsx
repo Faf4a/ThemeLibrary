@@ -44,9 +44,9 @@ export const LikesComponent = ({ themeId, likedThemes: initialLikedThemes }: { t
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    token,
                     themeId: themeId,
                 }),
             });
