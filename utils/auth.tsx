@@ -9,7 +9,7 @@ import { showNotification } from "@api/Notifications";
 import { openModal } from "@utils/modal";
 import { OAuth2AuthorizeModal, Toasts, UserStore } from "@webpack/common";
 
-import { themeRequest, logger } from "../components/ThemeTab";
+import { logger, themeRequest } from "../components/ThemeTab";
 
 export async function authorizeUser(triggerModal: boolean = true) {
     const isAuthorized = await getAuthorization();
@@ -18,9 +18,9 @@ export async function authorizeUser(triggerModal: boolean = true) {
         if (!triggerModal) return false;
         openModal((props: any) => <OAuth2AuthorizeModal
             {...props}
-            scopes={["identify"]}
+            scopes={["identify", "connections"]}
             responseType="code"
-            redirectUri="https://themes-delta.vercel.app/api/user/auth"
+            redirectUri="https://discord-themes.com/api/user/auth"
             permissions={0n}
             clientId="1257819493422465235"
             cancelCompletesFlow={false}

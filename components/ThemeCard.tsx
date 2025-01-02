@@ -4,19 +4,19 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { Settings } from "@api/Settings";
-import { Button, Card, Forms, Parser, React, UserUtils, FluxDispatcher, UserStore } from "@webpack/common";
-import { ModalContent, ModalFooter, ModalHeader, ModalRoot, ModalSize, openModal } from "@utils/modal";
-import { proxyLazy } from "@utils/lazy";
-import { Constructor } from "type-fest";
-import { User } from "discord-types/general";
-import { Margins } from "@utils/margins";
-import { OpenExternalIcon } from "@components/Icons";
-import { LikesComponent } from "./LikesComponent";
-import { ThemeInfoModal } from "./ThemeInfoModal";
 import { generateId } from "@api/Commands";
+import { Settings } from "@api/Settings";
+import { OpenExternalIcon } from "@components/Icons";
+import { proxyLazy } from "@utils/lazy";
+import { Margins } from "@utils/margins";
+import { ModalContent, ModalFooter, ModalHeader, ModalRoot, ModalSize, openModal } from "@utils/modal";
+import { Button, Card, FluxDispatcher, Forms, Parser, React, UserStore, UserUtils } from "@webpack/common";
+import { User } from "discord-types/general";
+import { Constructor } from "type-fest";
 
 import type { Theme, ThemeLikeProps } from "../types";
+import { LikesComponent } from "./LikesComponent";
+import { ThemeInfoModal } from "./ThemeInfoModal";
 import { apiUrl } from "./ThemeTab";
 
 interface ThemeCardProps {
@@ -49,9 +49,9 @@ export const ThemeCard: React.FC<ThemeCardProps> = ({ theme, themeLinks, likedTh
     const getUser = (id: string, username: string) => UserUtils.getUser(id) ?? makeDummyUser({ username, id });
 
     const handleAddRemoveTheme = () => {
-        const onlineThemeLinks = themeLinks.includes(`${apiUrl}/${theme.name}`)
-            ? themeLinks.filter(link => link !== `${apiUrl}/${theme.name}`)
-            : [...themeLinks, `${apiUrl}/${theme.name}`];
+        const onlineThemeLinks = themeLinks.includes(`${apiUrl}/${theme.id}`)
+            ? themeLinks.filter(link => link !== `${apiUrl}/${theme.id}`)
+            : [...themeLinks, `${apiUrl}/${theme.id}`];
 
         setThemeLinks(onlineThemeLinks);
         Vencord.Settings.themeLinks = onlineThemeLinks;
@@ -108,7 +108,7 @@ export const ThemeCard: React.FC<ThemeCardProps> = ({ theme, themeLinks, likedTh
         if (source) {
             VencordNative.native.openExternal(source);
         } else {
-            VencordNative.native.openExternal(`${apiUrl}/${theme.name}`);
+            VencordNative.native.openExternal(`${apiUrl}/${theme.id}`);
         }
     };
 
@@ -135,16 +135,16 @@ export const ThemeCard: React.FC<ThemeCardProps> = ({ theme, themeLinks, likedTh
                         </Forms.FormText>
                     )}
                     {!removeButtons && (
-                        < div style={{ marginTop: "8px", display: "flex", flexDirection: "row" }}>
+                        <div style={{ marginTop: "8px", display: "flex", flexDirection: "row" }}>
                             <Button
                                 onClick={handleThemeAttributesCheck}
                                 size={Button.Sizes.MEDIUM}
-                                color={themeLinks.includes(`${apiUrl}/${theme.name}`) ? Button.Colors.RED : Button.Colors.GREEN}
+                                color={themeLinks.includes(`${apiUrl}/${theme.id}`) ? Button.Colors.RED : Button.Colors.GREEN}
                                 look={Button.Looks.FILLED}
                                 className={Margins.right8}
                                 disabled={!theme.content || theme.id === "preview"}
                             >
-                                {themeLinks.includes(`${apiUrl}/${theme.name}`) ? "Remove Theme" : "Add Theme"}
+                                {themeLinks.includes(`${apiUrl}/${theme.id}`) ? "Remove Theme" : "Add Theme"}
                             </Button>
                             <Button
                                 onClick={async () => {
