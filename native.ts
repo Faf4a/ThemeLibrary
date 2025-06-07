@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { CspPolicies, MediaScriptsAndCssSrc } from "@main/csp";
 import { IpcMainInvokeEvent } from "electron";
 import { existsSync, type PathLike, writeFileSync } from "fs";
 import { join } from "path";
@@ -17,6 +18,9 @@ export async function themeExists(_: IpcMainInvokeEvent, dir: PathLike, theme: T
 export function getThemesDir(_: IpcMainInvokeEvent, dir: PathLike, theme: Theme) {
     return join(dir.toString(), `${theme.name}.theme.css`);
 }
+
+CspPolicies["discord-themes.com"] = MediaScriptsAndCssSrc;
+CspPolicies["cdn.discord-themes.com"] = MediaScriptsAndCssSrc;
 
 export async function downloadTheme(_: IpcMainInvokeEvent, dir: PathLike, theme: Theme) {
     if (!theme.content || !theme.name) return;
