@@ -10,7 +10,7 @@ import * as DataStore from "@api/DataStore";
 import { Settings } from "@api/Settings";
 import { ErrorCard } from "@components/ErrorCard";
 import { OpenExternalIcon } from "@components/Icons";
-import { SettingsTab, wrapTab } from "@components/VencordSettings/shared";
+import { SettingsTab, wrapTab } from "@components/settings/tabs/BaseTab";
 import { Logger } from "@utils/Logger";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
@@ -20,7 +20,7 @@ import { Button, Forms, React, SearchableSelect, TabBar, TextInput, useEffect, u
 import { SearchStatus, TabItem, Theme, ThemeLikeProps } from "../types";
 import { ThemeCard } from "./ThemeCard";
 
-const InputStyles = findByPropsLazy("inputDefault", "inputWrapper", "error");
+const InputStyles = findByPropsLazy("inputError", "inputWrapper", "error");
 
 export const apiUrl = "https://discord-themes.com/api";
 export const logger = new Logger("ThemeLibrary", "#e5c890");
@@ -225,7 +225,7 @@ function ThemeTab() {
                                     clearable={false}
                                     onChange={v => onStatusChange(v as SearchStatus)}
                                     closeOnSelect={true}
-                                    className={InputStyles.inputDefault}
+                                    className={InputStyles.input}
                                 />
                             </div>
                         </div>
