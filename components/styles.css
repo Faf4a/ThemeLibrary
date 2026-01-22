@@ -33,9 +33,9 @@
 }
 
 .vce-theme-info-tag {
-  background: var(--background-secondary);
-  color: var(--text-primary);
-  border: 2px solid var(--background-tertiary);
+  background: var(--background-secondary-alt);
+  color: var(--text-strong);
+  border: 2px solid var(--background-base-low);
   padding: 0.25rem 0.5rem;
   display: inline-block;
   border-radius: 5px;
@@ -45,10 +45,10 @@
 
 .vce-text-input {
   display: inline-block !important;
-  color: var(--text-normal) !important;
+  color: var(--text-default) !important;
   font-size: 16px !important;
   padding: 0.5em;
-  border: 2px solid var(--background-tertiary);
+  border: 2px solid var(--background-base-low);
   line-height: 1.2;
   max-height: unset;
 }
@@ -85,15 +85,15 @@
 }
 
 .vce-overwrite-modal {
-  border: 1px solid var(--background-modifier-accent);
+  border: 1px solid var(--input-border-default, var(--input-border));
   border-radius: 8px;
   padding: 0.5em;
 }
 
 .vce-image-paste {
   border-radius: 8px;
-  border: 3px dashed var(--background-modifier-accent);
-  background-color: var(--background-secondary);
+  border: 3px dashed var(--input-border-default, var(--input-border));
+  background-color: var(--background-secondary-alt);
   padding: 20px;
   text-align: center;
   position: relative;
@@ -115,7 +115,7 @@
 
 .vce-styled-list li {
   padding: 10px 0;
-  border-bottom: thin solid var(--background-modifier-accent);
+  border-bottom: thin solid var(--input-border-default, var(--input-border));
 }
 
 .vce-styled-list li:last-child {
@@ -123,7 +123,7 @@
 }
 
 .vce-divider-border {
-  border-bottom: thin solid var(--background-modifier-accent);
+  border-bottom: thin solid var(--input-border-default, var(--input-border));
   padding: 10px 0;
   width: 100%;
 }

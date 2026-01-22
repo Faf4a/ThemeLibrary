@@ -19,13 +19,13 @@ export function getThemesDir(_: IpcMainInvokeEvent, dir: PathLike, theme: Theme)
     return join(dir.toString(), `${theme.name}.theme.css`);
 }
 
-CspPolicies["discord-themes.com"] = ImageScriptsAndCssSrc;
-CspPolicies["cdn.discord-themes.com"] = ImageScriptsAndCssSrc;
+CspPolicies["themes.equicord.org"] = ImageScriptsAndCssSrc;
+CspPolicies["cdn.themes.equicord.org"] = ImageScriptsAndCssSrc;
 
 export async function downloadTheme(_: IpcMainInvokeEvent, dir: PathLike, theme: Theme) {
     if (!theme.content || !theme.name) return;
     const path = join(dir.toString(), `${theme.name}.theme.css`);
-    const download = await fetch(`https://discord-themes.com/api/download/${theme.id}`);
+    const download = await fetch(`https://themes.equicord.org/api/download/${theme.id}`);
     const content = await download.text();
     writeFileSync(path, content);
 }
