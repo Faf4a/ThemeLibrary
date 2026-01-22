@@ -19,4 +19,4 @@ The installation guide can be found [here](https://discord.com/channels/10150602
 
 ### Don't want to install this but still find some themes?
 
-You can also find all themes via https://discord-themes.com
+You can also find all themes via <https://themes.equicord.org>
